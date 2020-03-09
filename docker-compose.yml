@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+
+  registry:
+    build: ./registry
+    restart: on-failure
+    ports:
+      - '8761:8761'
+
+  gateway:
+    build: ./gateway
+    restart: on-failure
+    ports:
+      - '8080:8080'
+    depends_on:
+      - registry
+      -
+  users:
+    build: ./users
+    restart: on-failure
+    ports:
+      - '9090:9090'
+    depends_on:
+      - registry
+      - user-database
+
+  user-database:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=users
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - MONGO_INITDB_DATABASE=admin
+    ports:
+      - 27017:27017

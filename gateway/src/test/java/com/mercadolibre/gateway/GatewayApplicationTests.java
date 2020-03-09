@@ -1,4 +1,4 @@
-package src.test.java.com.mercadolibre.gateway;
+package com.mercadolibre.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
