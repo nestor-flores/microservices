@@ -3,4 +3,4 @@ COPY target/gateway-1.0.0.jar gateway.jar
 
 ENTRYPOINT ["java","-jar","/gateway.jar"]
 
-EXPOSE 8176
+EXPOSE 8080

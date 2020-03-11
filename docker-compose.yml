@@ -15,7 +15,10 @@ services:
       - '8080:8080'
     depends_on:
       - registry
-      -
+    environment:
+      - REGISTRY=registry
+      - SERVER_URL=gateway
+
   users:
     build: ./users
     restart: on-failure
@@ -24,6 +27,11 @@ services:
     depends_on:
       - registry
       - user-database
+    environment:
+      - MONGODB_HOST=user-database
+      - REGISTRY=registry
+      - SERVER_URL=users
+
 
   user-database:
     image: mongo:latest
@@ -32,4 +40,53 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=123456
       - MONGO_INITDB_DATABASE=admin
     ports:
-      - 27017:27017
+      - '27017:27017'
+
+  sales:
+    build: ./sales
+    restart: on-failure
+    ports:
+      - '9092:9092'
+    depends_on:
+      - registry
+      - sales-database
+      - notification-queue
+    environment:
+      - MYSQL_HOST=sales-database
+      - REGISTRY=registry
+      - SERVER_URL=sales
+      - RABBIT_MQ_HOST=notification-queue
+
+  sales-database:
+    image: mysql:latest
+    environment:
+      - MYSQL_DATABASE=sales
+      - MYSQL_USER=sales
+      - MYSQL_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=microservices
+    ports:
+      - '3306:3306'
+
+  notification:
+    build: ./notification
+    restart: on-failure
+    ports:
+      - '9093:9093'
+    depends_on:
+      - registry
+      - notification-queue
+    environment:
+      - RABBIT_MQ_HOST=notification-queue
+      - REGISTRY=registry
+      - SERVER_URL=notification
+
+
+  notification-queue:
+    image: "rabbitmq:3-management"
+    hostname: "rabbit"
+    restart: on-failure
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      NAME: "rabbitmq"

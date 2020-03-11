@@ -21,6 +21,9 @@
         <module>gateway</module>
         <module>registry</module>
         <module>users</module>
+        <module>sales</module>
+        <module>notification</module>
+        <module>commons-library</module>
     </modules>
 
     <repositories>

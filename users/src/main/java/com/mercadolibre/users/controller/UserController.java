@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,9 +28,15 @@ public class UserController {
         return userService.getAll();
     }
 
-   @PutMapping("/")
-   public User addUser(@RequestBody User user) {
+    @PutMapping("/")
+    public User addUser(@RequestBody User user) {
         return userService.addUser(user);
+    }
 
-   }
+    @GetMapping("/findByName")
+    public User findByName(@RequestParam String username) {
+
+        return userService.findByName(username);
+
+    }
 }
